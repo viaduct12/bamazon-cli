@@ -20,8 +20,17 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
+  printTable();
   start();
 });
+
+function printTable(){
+  connection.query("SELECT * FROM products", (err,data) => {
+    if (err) throw err;
+    console.log("\n");
+    console.table(data);
+  });
+}
 
 function start() {
   inquirer.prompt([
@@ -39,16 +48,15 @@ function start() {
 }
 
 function productSearch(id, unit){
-  connection.query("SELECT id, stock_quantity FROM products", (err, results) => {
+  console.log(unit);
+  connection.query("SELECT * FROM products", (err, results) => {
     if (err) throw err;
-
-    
-    var idCrap = results.filter(item => {
+    results.filter(item => {
       if(item.id === parseInt(id)){
-        // return true;
         if(unit <= item.stock_quantity){
           var newAmount = item.stock_quantity - unit;
-          // console.log(newAmount);
+          var purchased = (item.price * unit) + (item.price * unit) * .15;
+          console.log("The total amount for your purchase plus tax is: $" + purchased);
           connection.query(
             "UPDATE products SET ? WHERE ?",
             [
@@ -62,17 +70,13 @@ function productSearch(id, unit){
             )
             return true;
         } else {
-          console.log("We regret to inform you that the number of units you wish procure is greater than our stock. Please reselect a different quantity");
-          // connection.end();
+          console.log("Insufficient quantity!");
           start();
         }
       }
       return false;
-      // console.log(item.id, id);
     });
-
-    console.log(idCrap, "hello");
-
+    printTable();
     connection.end();
   })
 }
