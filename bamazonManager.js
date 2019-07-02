@@ -20,17 +20,8 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
-  // printTable();
   start();
 });
-
-function printTable() {
-  connection.query("SELECT * FROM products", (err, data) => {
-    if (err) throw err;
-    console.log("\n");
-    console.table(data);
-  });
-}
 
 function start() {
   inquirer.prompt([
@@ -75,7 +66,7 @@ function products(){
     if (err) throw err;
 
     console.table(result);
-    connection.end();
+    start();
   })
 }
 
@@ -84,6 +75,38 @@ function lowInv(){
     if (err) throw err;
 
     console.table(data);
-    connection.end();
+    start();
+  })
+}
+
+function addInv(){
+  inquirer.prompt([
+    {
+      name:"item",
+      message:"Which item id would you like to add more inventory too?"
+    },
+    {
+      name:"quantity",
+      message:"How much would you like to add to the current stock?"
+    }
+  ]).then(answer => {
+    
+    var idInt = parseInt(answer.item);
+    connection.query("SELECT * FROM products WHERE ?", {id:idInt}, (err,data)=> {
+      if (err) throw err;
+      var quantityInt = parseInt(answer.quantity) + data[0].stock_quantity;
+    
+      connection.query("UPDATE products SET ? WHERE ?", [
+        {
+          stock_quantity: quantityInt
+        },
+        {
+          id: parseInt(answer.item)
+        }
+      ], (err,data) =>{
+        if(err) throw err;
+        products();
+      })
+    })
   })
 }
