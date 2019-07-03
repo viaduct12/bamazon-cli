@@ -25,7 +25,7 @@ connection.connect(function (err) {
 });
 
 function printTable(){
-  connection.query("SELECT * FROM products", (err,data) => {
+  connection.query("SELECT id, product_name, price FROM products", (err,data) => {
     if (err) throw err;
     console.log("\n");
     console.table(data);

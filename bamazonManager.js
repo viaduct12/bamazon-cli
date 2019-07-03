@@ -32,7 +32,8 @@ function start() {
         "View Products for Sale",
         "View Low Inventory",
         "Add to Inventory",
-        "Add New Product"
+        "Add New Product",
+        "Exit"
       ],
       message: "What would you like to do?"
     }
@@ -55,8 +56,13 @@ function start() {
         addProd();
         break;
 
-        default:
-          break;
+      case "Exit":
+        console.log("Good Bye.");
+        connection.end();
+        break;
+
+      default:
+        break;
     }
   })
 }
@@ -108,5 +114,33 @@ function addInv(){
         products();
       })
     })
+  })
+}
+
+function addProd(){
+  inquirer.prompt([
+    {
+      name:"prodName",
+      message:"What is the name of the product that you want to add?"
+    },
+    {
+      name: "deptName",
+      message: "What is the type of the product is this?"
+    },
+    {
+      name: "pricePoint",
+      message: "What is the price of the product that you want to add?"
+    },
+    {
+      name: "stock",
+      message: "How much of the product did you want to add?"
+    }            
+  ]).then(answer =>{
+    var queries = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ?";
+    var values = [[answer.prodName, answer.deptName, parseInt(answer.pricePoint), parseInt(answer.stock)]];
+    connection.query(queries, [values], (err,data) => {
+      if (err) throw err;
+    })
+    products();
   })
 }
