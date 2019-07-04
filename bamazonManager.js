@@ -107,10 +107,11 @@ function addInv(){
           stock_quantity: quantityInt
         },
         {
-          id: parseInt(answer.item)
+          id: idInt
         }
-      ], (err,data) =>{
+      ], (err,data) => {
         if(err) throw err;
+        console.table(data);
         products();
       })
     })

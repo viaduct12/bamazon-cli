@@ -48,34 +48,34 @@ function start() {
 }
 
 function productSearch(id, unit){
-  console.log(unit);
-  connection.query("SELECT * FROM products", (err, results) => {
+  connection.query("SELECT * FROM products WHERE ? ", {id:id}, (err, results) => {
     if (err) throw err;
-    results.filter(item => {
-      if(item.id === parseInt(id)){
-        if(unit <= item.stock_quantity){
-          var newAmount = item.stock_quantity - unit;
-          var purchased = (item.price * unit) + (item.price * unit) * .15;
-          console.log("The total amount for your purchase plus tax is: $" + purchased);
-          connection.query(
-            "UPDATE products SET ? WHERE ?",
-            [
-              {
-                stock_quantity: newAmount
-              },
-              {
-                id: item.id
-              }
-            ],
-            )
-            return true;
-        } else {
-          console.log("Insufficient quantity!");
-          start();
-        }
-      }
-      return false;
-    });
+
+    if (unit <= results[0].stock_quantity) {
+      var newAmount = results[0].stock_quantity - unit;
+      var purchased = (results[0].price * unit) + (results[0].price * unit) * .15;
+      var purchase = results[0].price * unit;
+      console.log("The total amount before tax is: $" + purchase + " after tax it is: $" + purchased);
+
+
+      connection.query("UPDATE products SET ? WHERE ?", [
+          {
+            stock_quantity: newAmount,
+            product_sales: purchase            
+          },
+          {
+            id: id
+          }
+        ], (err, data) => {
+          if (err) throw err;
+          console.table(data);
+          console.table(results);
+        })
+
+    } else {
+      console.log("Insufficient quantity!");
+      start();
+    }
     printTable();
     connection.end();
   })
