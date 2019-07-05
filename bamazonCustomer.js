@@ -55,28 +55,25 @@ function productSearch(id, unit){
       var newAmount = results[0].stock_quantity - unit;
       var purchased = (results[0].price * unit) + (results[0].price * unit) * .15;
       var purchase = results[0].price * unit;
+      var totalPurchase = results[0].product_sales + (results[0].price * unit);
       console.log("The total amount before tax is: $" + purchase + " after tax it is: $" + purchased);
-
 
       connection.query("UPDATE products SET ? WHERE ?", [
           {
             stock_quantity: newAmount,
-            product_sales: purchase            
+            product_sales: totalPurchase            
           },
           {
             id: id
           }
         ], (err, data) => {
           if (err) throw err;
-          console.table(data);
-          console.table(results);
         })
 
     } else {
       console.log("Insufficient quantity!");
-      start();
     }
-    printTable();
     connection.end();
+    
   })
 }

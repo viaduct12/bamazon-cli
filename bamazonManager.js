@@ -57,7 +57,7 @@ function start() {
         break;
 
       case "Exit":
-        console.log("Good Bye.");
+        console.log("Goodbye!");
         connection.end();
         break;
 
@@ -111,7 +111,6 @@ function addInv(){
         }
       ], (err,data) => {
         if(err) throw err;
-        console.table(data);
         products();
       })
     })
