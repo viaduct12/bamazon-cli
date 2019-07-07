@@ -64,12 +64,15 @@ function start() {
 }
 
 function sales() {
+
+  //joins both tables to show the over head, department name and product sales. importing the stock quantity to use as replacement field to show the total profit. 
   var query = "SELECT departments.department_id, departments.over_head_costs, departments.department_name, products.product_sales, products.stock_quantity AS total_profit FROM departments INNER JOIN products on departments.department_name=products.department_name";
 
   connection.query(query, (err,data) => {
     if (err) throw err;
   
     for(var i = 0; i < data.length; i++){
+      //using the new alias column subtracting the sales from the over head to produce the total profit
       data[i].total_profit = data[i].product_sales - data[i].over_head_costs;
     }
     console.log("\n");
@@ -80,6 +83,7 @@ function sales() {
   start();
 }
 
+//create a new department in the database
 function create() {
 
   inquirer.prompt([

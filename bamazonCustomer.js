@@ -24,6 +24,7 @@ connection.connect(function (err) {
   start();
 });
 
+//prints the data from the database to a table with the selected columns
 function printTable(){
   connection.query("SELECT id, product_name, price FROM products", (err,data) => {
     if (err) throw err;
@@ -33,6 +34,7 @@ function printTable(){
 }
 
 function start() {
+  //asks for user input
   inquirer.prompt([
     {
       name: "productID",
@@ -43,25 +45,30 @@ function start() {
       message: "How many units of the product you'd like to purchase?"
     }
   ]).then (response => {
+    //parses the responses as ints and passes it into a function to search for the product in the database
     productSearch(parseInt(response.productID), parseInt(response.units));
   })
 }
 
 function productSearch(id, unit){
+  //connects to the server and prompts a query which selects all of the columns from the products table where id matches the user input id
   connection.query("SELECT * FROM products WHERE ? ", {id:id}, (err, results) => {
     if (err) throw err;
 
+    //compares the amount the customer wants to buy to the stock quantity
     if (unit <= results[0].stock_quantity) {
+      //created variables to subtract the quantity from the stock and to store the purchase price and the total purchases.
       var newAmount = results[0].stock_quantity - unit;
       var purchased = (results[0].price * unit) + (results[0].price * unit) * .15;
       var purchase = results[0].price * unit;
       var totalPurchase = results[0].product_sales + (results[0].price * unit);
       console.log("The total amount before tax is: $" + purchase + " after tax it is: $" + purchased);
 
+      //updates the database with the new quantity
       connection.query("UPDATE products SET ? WHERE ?", [
           {
             stock_quantity: newAmount,
-            product_sales: totalPurchase            
+            product_sales: totalPurchase
           },
           {
             id: id
@@ -74,6 +81,6 @@ function productSearch(id, unit){
       console.log("Insufficient quantity!");
     }
     connection.end();
-    
+
   })
 }

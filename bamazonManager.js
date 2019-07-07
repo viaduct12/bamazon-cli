@@ -38,6 +38,8 @@ function start() {
       message: "What would you like to do?"
     }
   ]).then(answer => {
+
+    //switch statement
     switch (answer.options) {
 
       case "View Products for Sale":
@@ -67,6 +69,7 @@ function start() {
   })
 }
 
+//prints out the table for the manager to see
 function products(){
   connection.query("SELECT * FROM products", (err,result) =>{
     if (err) throw err;
@@ -76,6 +79,7 @@ function products(){
   })
 }
 
+//prints out the inventory that is below a quantity of 5
 function lowInv(){
   connection.query("SELECT * FROM products WHERE stock_quantity < 5 ", (err,data) => {
     if (err) throw err;
@@ -85,6 +89,7 @@ function lowInv(){
   })
 }
 
+//function to add quantity to the inventory
 function addInv(){
   inquirer.prompt([
     {
@@ -116,7 +121,7 @@ function addInv(){
     })
   })
 }
-
+//adds a product to the SQL 
 function addProd(){
   inquirer.prompt([
     {
