@@ -24,14 +24,6 @@ Bamazon that will check the stock to sell items to customers. Supervisor mode wi
 
 ## Functionality
 
-- ``` node liri.js concert-this '<artist/band name here>' ```
-
-* Uses the Bands in Town API and npm axios to search for concert events using the artist or band as a search key. The response will render information regarding the following :
-
-  * Name of the venue
-  * Venue location
-  * Date of the Event (using the format "MM/DD/YYYY")
-
 - ``` node bamazonCustomer.js ```
 
 * Shows a table of items to purchase and asks the customer what id of the item they would like to purchase. Then asks the customer how many of the item would they like to acquire. If the quantity is greater than the stock quantity then an error will be thrown. Uses SQL to store all the data.
