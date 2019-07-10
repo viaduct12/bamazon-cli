@@ -1,7 +1,7 @@
 # bamazon-cli
 
 ## Descriptionn
-LIRI ihttps://github.com/viaduct12/bamazon-clirpretation and Recognition Interface, LIRI is a Language Interpretation and Recognition Interface. LIRI will be a command line node app that takes in parameters and gives you back data.
+Bamazon that will check the stock to sell items to customers. Supervisor mode will allow the user to view product sales and create departments. Manager mode allows the user to View products for sale, low inventory, add to inventory, and add new products. 
 
 ## Software Installations
 
